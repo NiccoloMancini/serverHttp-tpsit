@@ -29,7 +29,6 @@ public class Main {
             if (resource.equals("/")) {
                 resource = "/index.html";
             }
-            
             File file = new File("progetto_personale" + resource);
             if(file.exists()){
                 out.writeBytes("HTTP/1.1 200 OK\n");
