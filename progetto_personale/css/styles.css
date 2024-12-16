@@ -1,0 +1,34 @@
+.margin{
+    margin-top: 30%;
+}
+
+.marginFiorentina{
+  margin-top: 30%;
+}
+
+.zoomImage{
+  transition: 1s;
+}
+
+.zoomImage:hover{
+  transition: 1s;
+  transform: scale(1.06);
+}
+
+@media screen and (max-width: 991px) {
+    .margin{
+        margin-top: 5%;
+    }
+  }
+
+@media screen and (max-width: 767px) {
+  .margin{
+      margin-top: 13%;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  .marginFiorentina{
+      margin-top: 5%;
+  }
+}

@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.URLDecoder;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -19,31 +20,24 @@ public class Main {
             BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
             DataOutputStream out = new DataOutputStream(s.getOutputStream());
             String[] firstline = in.readLine().split(" ");
-            String method = firstline[0];
             String resource = firstline[1];
-            String version = firstline[2];
             String header;
             do{
                 header = in.readLine();
             }while(!header.isEmpty());
-            String type;
+            resource = URLDecoder.decode(resource, "UTF-8");
             if (resource.equals("/")) {
                 resource = "/index.html";
             }
-            File file = new File("htdocs" + resource);
+            
+            File file = new File("progetto_personale" + resource);
             if(file.exists()){
-                String[] splitResource = resource.split("\\.");
-                if (splitResource[1].equals("html")) {
-                    type = "text/html";
-                }else {
-                    type = "text/plain";
-                }
                 out.writeBytes("HTTP/1.1 200 OK\n");
-                out.writeBytes("Content-Type: " + type + "\n");
+                out.writeBytes("Content-Type: " + getContentType(resource) + "\n");
                 out.writeBytes("Content-Length: " + file.length() + "\n");
                 out.writeBytes("\n");
                 InputStream input = new FileInputStream(file);
-                byte[] buf = new byte[8192];
+                byte[] buf = new byte[65536];
                 int n;
                 while ((n = input.read(buf)) != -1) {
                     out.write(buf, 0, n);
@@ -57,6 +51,34 @@ public class Main {
                 out.writeBytes("");
             }
             System.out.println("richiesta terminata");
+            s.close();
         }
+    }
+
+    private static String getContentType(String resource){
+        String[] splitResource = resource.split("\\.");
+        switch (splitResource[1]) {
+            case "html":
+            case "htm":
+                return "text/html";    
+            case "png":
+            case "PNG":
+                return "image/png";
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";    
+            case "css":
+                return "text/css";
+            case "js":
+                return "application/js";
+            case "svg":
+                return "image/svg";
+            case "webp":
+                return "image/webp";
+            default:
+                return "";
+            
+    
+        }        
     }
 }
